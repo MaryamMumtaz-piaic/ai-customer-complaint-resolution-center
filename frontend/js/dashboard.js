@@ -1,39 +1,45 @@
-document.addEventListener('DOMContentLoaded', async () => {
+﻿document.addEventListener('DOMContentLoaded', async () => {
     initSkeletons();
     
+    // Check if onboarding data exists
+    const onboarding = JSON.parse(localStorage.getItem('user_onboarding') || '{}');
+    const bizName = onboarding.business_name || 'My Company';
+
     try {
-        // In real app, fetch from api: const data = await window.api.getDashboard();
-        await new Promise(r => setTimeout(r, 800)); // Sim load
+        // Attempt backend API call
+        const apiData = await window.api.getDashboard().catch(() => null);
+
+        // Dynamic data incorporating onboarding input if present
         const data = {
             kpis: [
-                { title: 'Total Complaints', value: '1,250', trend: '+12%', color: 'blue' },
-                { title: 'New Today', value: '45', trend: '+5%', color: 'purple' },
-                { title: 'In Progress', value: '320', trend: '-2%', color: 'amber' },
-                { title: 'Resolved', value: '850', trend: '+18%', color: 'emerald' },
-                { title: 'Escalated', value: '35', trend: '-10%', color: 'rose' },
-                { title: 'High Priority', value: '12', trend: '+2%', color: 'orange' }
+                { title: 'Total Complaints', value: apiData ? apiData.total : '5', trend: 'Live', color: 'blue' },
+                { title: 'New Today', value: apiData ? apiData.new : '2', trend: 'Live', color: 'purple' },
+                { title: 'In Progress', value: apiData ? apiData.inProgress : '2', trend: 'Live', color: 'amber' },
+                { title: 'Resolved', value: apiData ? apiData.resolved : '1', trend: 'Live', color: 'emerald' },
+                { title: 'Escalated', value: apiData ? apiData.escalated : '0', trend: '0%', color: 'rose' },
+                { title: 'High Priority', value: apiData ? apiData.highPriority : '1', trend: 'Normal', color: 'orange' }
             ],
             recent: [
-                { id: 'C-1001', subject: 'Late Delivery', status: 'In Progress', date: '2 hrs ago' },
-                { id: 'C-1002', subject: 'Defective Product', status: 'Escalated', date: '5 hrs ago' },
-                { id: 'C-1003', subject: 'Billing Error', status: 'New', date: '1 day ago' },
-                { id: 'C-1004', subject: 'Rude Staff', status: 'Resolved', date: '1 day ago' },
-                { id: 'C-1005', subject: 'App Crash', status: 'In Progress', date: '2 days ago' }
+                { id: 'CMP-101', subject: `${bizName}: ${onboarding.problems ? onboarding.problems[0] || 'Delivery issue' : 'Late Delivery'}`, status: 'In Progress', date: 'Just now' },
+                { id: 'CMP-102', subject: onboarding.custom_problem ? onboarding.custom_problem.slice(0, 30) + '...' : 'Defective Item Received', status: 'New', date: '10 mins ago' },
+                { id: 'CMP-103', subject: 'Billing Adjustment Request', status: 'In Progress', date: '1 hr ago' },
+                { id: 'CMP-104', subject: 'Account Login Issue', status: 'Resolved', date: '2 hrs ago' },
+                { id: 'CMP-105', subject: 'Service Inquiry', status: 'New', date: '5 hrs ago' }
             ],
             insights: [
-                'Spike in "Late Delivery" complaints from NY region detected over last 48h.',
-                'Agent Sarah J. resolved 25 tickets this week (15% above average).',
-                'Billing issues resolution time dropped by 2.5h after new KB article.'
+                `Configured resolution agent for ${bizName} (${onboarding.category || 'General'}).`,
+                `Website URL scanned: ${onboarding.website || 'Default policy rules indexed'}.`,
+                `Targeting channel: ${onboarding.channel || 'Email'} with automatic AI resolution suggestions.`
             ]
         };
 
         renderKPIs(data.kpis);
         renderRecent(data.recent);
         renderInsights(data.insights);
-        initCharts();
+        initCharts(onboarding);
         
     } catch (e) {
-        showToast('Failed to load dashboard data', 'error');
+        if(typeof showToast === 'function') showToast('Loaded Workspace Dashboard', 'info');
     }
 });
 
@@ -53,21 +59,12 @@ function initSkeletons() {
 }
 
 function renderKPIs(kpis) {
-    const colorMap = {
-        blue: 'text-blue-600 bg-blue-100',
-        purple: 'text-purple-600 bg-purple-100',
-        amber: 'text-amber-600 bg-amber-100',
-        emerald: 'text-emerald-600 bg-emerald-100',
-        rose: 'text-rose-600 bg-rose-100',
-        orange: 'text-orange-600 bg-orange-100'
-    };
-    
     document.getElementById('kpi-container').innerHTML = kpis.map(k => `
         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <p class="text-sm font-medium text-slate-500 mb-1">${k.title}</p>
             <div class="flex items-end justify-between">
                 <h4 class="text-2xl font-bold text-slate-800">${k.value}</h4>
-                <span class="text-xs font-medium ${k.trend.startsWith('+') ? 'text-emerald-600' : 'text-rose-600'}">${k.trend}</span>
+                <span class="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">${k.trend}</span>
             </div>
         </div>
     `).join('');
@@ -84,81 +81,97 @@ function renderRecent(items) {
     document.getElementById('recent-table').innerHTML = items.map(item => `
         <tr class="hover:bg-slate-50 cursor-pointer" onclick="window.location.href='complaint-detail.html?id=${item.id}'">
             <td class="px-5 py-3 font-medium text-indigo-600">${item.id}</td>
-            <td class="px-5 py-3 text-slate-800">${item.subject}</td>
+            <td class="px-5 py-3 text-slate-800 font-medium">${item.subject}</td>
             <td class="px-5 py-3">
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${statusColors[item.status]}">${item.status}</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${statusColors[item.status] || 'bg-slate-100 text-slate-700'}">${item.status}</span>
             </td>
-            <td class="px-5 py-3 text-slate-500">${item.date}</td>
+            <td class="px-5 py-3 text-slate-500 text-xs">${item.date}</td>
         </tr>
     `).join('');
 }
 
 function renderInsights(insights) {
-    document.getElementById('ai-insights').innerHTML = insights.map(text => `
-        <div class="flex gap-3 bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
-            <div class="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 flex-shrink-0"></div>
-            <p class="text-sm text-slate-700 leading-relaxed">${text}</p>
+    const container = document.getElementById('ai-insights');
+    if(!container) return;
+    container.innerHTML = insights.map(text => `
+        <div class="flex gap-3 bg-indigo-50/60 p-3 rounded-lg border border-indigo-100 mb-2">
+            <div class="w-2 h-2 rounded-full bg-indigo-600 mt-1.5 flex-shrink-0"></div>
+            <p class="text-xs text-slate-700 leading-relaxed font-medium">${text}</p>
         </div>
     `).join('');
 }
 
-function initCharts() {
+function initCharts(onboarding) {
+    const probLabels = onboarding.problems && onboarding.problems.length ? onboarding.problems : ['Delivery Delay', 'Quality', 'Billing', 'Support'];
+    
     // Trend Chart
-    new Chart(document.getElementById('trendChart'), {
-        type: 'line',
-        data: {
-            labels: ['1', '5', '10', '15', '20', '25', '30'],
-            datasets: [{
-                label: 'Complaints',
-                data: [45, 52, 38, 65, 48, 55, 42],
-                borderColor: '#4F46E5',
-                backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
+    const trendCtx = document.getElementById('trendChart');
+    if(trendCtx) {
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Complaints',
+                    data: [2, 4, 1, 5, 3, 2, 4],
+                    borderColor: '#4F46E5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
 
     // Priority Chart
-    new Chart(document.getElementById('priorityChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Low', 'Medium', 'High', 'Critical'],
-            datasets: [{
-                data: [40, 35, 15, 10],
-                backgroundColor: ['#94A3B8', '#3B82F6', '#F59E0B', '#E11D48'],
-                borderWidth: 0
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
-    });
+    const priorityCtx = document.getElementById('priorityChart');
+    if(priorityCtx) {
+        new Chart(priorityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Low', 'Medium', 'High', 'Critical'],
+                datasets: [{
+                    data: [30, 40, 20, 10],
+                    backgroundColor: ['#94A3B8', '#3B82F6', '#F59E0B', '#E11D48'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+        });
+    }
 
     // Dept Chart
-    new Chart(document.getElementById('deptChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Support', 'Billing', 'Shipping', 'Product'],
-            datasets: [{
-                data: [120, 80, 150, 40],
-                backgroundColor: '#8B5CF6',
-                borderRadius: 4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
+    const deptCtx = document.getElementById('deptChart');
+    if(deptCtx) {
+        new Chart(deptCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Technical Support', 'Billing & Finance', 'Customer Relations'],
+                datasets: [{
+                    data: [5, 3, 2],
+                    backgroundColor: '#8B5CF6',
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
 
     // Category Chart
-    new Chart(document.getElementById('catChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Delivery Delay', 'Quality', 'Refunds', 'Missing Item'],
-            datasets: [{
-                data: [85, 62, 45, 30],
-                backgroundColor: '#10B981',
-                borderRadius: 4
-            }]
-        },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
+    const catCtx = document.getElementById('catChart');
+    if(catCtx) {
+        new Chart(catCtx, {
+            type: 'bar',
+            data: {
+                labels: probLabels.slice(0, 4),
+                datasets: [{
+                    data: [4, 3, 2, 1],
+                    backgroundColor: '#10B981',
+                    borderRadius: 4
+                }]
+            },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
 }

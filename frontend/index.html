@@ -1,117 +1,273 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | ComplaintIQ</title>
+    <title>AI Complaint Resolution Setup | ComplaintIQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: '#4F46E5', secondary: '#64748B' }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="css/app.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="bg-slate-50 min-h-screen flex">
-    
-    <!-- Left Side: Gradient / Illustration -->
-    <div class="hidden lg:flex w-1/2 bg-indigo-600 p-12 flex-col justify-between relative overflow-hidden">
-        <div class="relative z-10">
-            <div class="flex items-center gap-2 text-white mb-12">
-                <i data-lucide="cpu" class="w-8 h-8"></i>
-                <span class="text-2xl font-bold">ComplaintIQ</span>
-            </div>
-            <h1 class="text-4xl font-bold text-white mb-6 leading-tight">
-                AI-Powered Customer<br>Support Intelligence
+<body class="bg-slate-50 min-h-screen font-sans">
+    <nav class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2 text-indigo-600 font-bold text-xl">
+            <i data-lucide="cpu" class="w-7 h-7"></i>
+            <span>Complaint<span class="text-slate-800">IQ</span></span>
+        </div>
+        <a href="login.html" class="text-sm font-medium text-slate-600 hover:text-indigo-600 flex items-center gap-1">
+            <i data-lucide="log-in" class="w-4 h-4"></i> Agent Login
+        </a>
+    </nav>
+
+    <main class="max-w-4xl mx-auto py-12 px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3">
+                Setup Your AI Customer Resolution Assistant
             </h1>
-            <p class="text-indigo-100 text-lg max-w-md">
-                Resolve complaints faster, identify recurring issues, and improve customer satisfaction with our intelligent resolution center.
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+                Tell us about your business and website. Our AI will analyze your requirements and generate tailored complaint handling strategies in real-time.
             </p>
         </div>
-        
-        <!-- Abstract background elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-            <svg viewBox="0 0 100 100" class="absolute w-96 h-96 -top-10 -right-10 text-white fill-current"><circle cx="50" cy="50" r="50"/></svg>
-            <svg viewBox="0 0 100 100" class="absolute w-64 h-64 bottom-20 left-10 text-white fill-current"><circle cx="50" cy="50" r="50"/></svg>
-        </div>
-    </div>
 
-    <!-- Right Side: Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div class="w-full max-w-md">
-            <!-- Mobile Logo -->
-            <div class="flex lg:hidden items-center gap-2 text-indigo-600 mb-8 justify-center">
-                <i data-lucide="cpu" class="w-8 h-8"></i>
-                <span class="text-2xl font-bold">ComplaintIQ</span>
+        <!-- Wizard Card -->
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            <!-- Progress Bar -->
+            <div class="bg-slate-100 h-2 w-full">
+                <div id="progress" class="bg-indigo-600 h-full w-1/4 transition-all duration-300"></div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <h2 class="text-2xl font-bold text-slate-800 mb-2">Welcome back</h2>
-                <p class="text-slate-500 mb-8">Please enter your details to sign in.</p>
+            <div class="p-8 sm:p-10">
+                <!-- STEP 1: Business Profile -->
+                <div id="step-1" class="step-content space-y-6">
+                    <div class="flex items-center gap-3 text-indigo-600">
+                        <span class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center font-bold">1</span>
+                        <h2 class="text-xl font-bold text-slate-800">Tell us about your Business</h2>
+                    </div>
 
-                <form id="loginForm" class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Email address</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i data-lucide="mail" class="w-5 h-5 text-slate-400"></i>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Company / Business Name</label>
+                            <input type="text" id="biz_name" placeholder="e.g. Apex Logistics or Nexa Electronics" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Business Industry / Category</label>
+                            <select id="biz_category" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="E-Commerce & Retail">E-Commerce & Retail</option>
+                                <option value="SaaS & Software">SaaS & Software</option>
+                                <option value="Financial Services / Banking">Financial Services / Banking</option>
+                                <option value="Healthcare & Services">Healthcare & Services</option>
+                                <option value="Logistics & Delivery">Logistics & Delivery</option>
+                                <option value="Telecommunication">Telecommunication</option>
+                                <option value="Other Services">Other Services</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Official Website URL (AI Analyzer)</label>
+                            <div class="relative">
+                                <i data-lucide="globe" class="w-5 h-5 absolute left-3 top-3.5 text-slate-400"></i>
+                                <input type="url" id="biz_url" placeholder="https://example.com" class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
-                            <input type="email" id="email" class="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="admin@company.com" required value="admin@company.com">
+                            <p class="text-xs text-slate-500 mt-1">Our AI will scan your website for product details and support policies.</p>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i data-lucide="lock" class="w-5 h-5 text-slate-400"></i>
+                    <div class="pt-4 flex justify-end">
+                        <button onclick="nextStep(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md">
+                            Continue <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Main Problems & Issues -->
+                <div id="step-2" class="step-content hidden space-y-6">
+                    <div class="flex items-center gap-3 text-indigo-600">
+                        <span class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center font-bold">2</span>
+                        <h2 class="text-xl font-bold text-slate-800">What customer problems do you face most?</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Select Frequent Complaint Types</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="problems_grid">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                                    <input type="checkbox" value="Delayed Shipping or Delivery" class="w-4 h-4 text-indigo-600 rounded">
+                                    <span class="text-sm font-medium text-slate-700">Delayed Shipping & Delivery</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                                    <input type="checkbox" value="Defective or Damaged Product" class="w-4 h-4 text-indigo-600 rounded">
+                                    <span class="text-sm font-medium text-slate-700">Defective / Damaged Item</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                                    <input type="checkbox" value="Billing Discrepancies & Refund Delays" class="w-4 h-4 text-indigo-600 rounded">
+                                    <span class="text-sm font-medium text-slate-700">Billing & Refund Delays</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                                    <input type="checkbox" value="Poor Technical Support / Downtime" class="w-4 h-4 text-indigo-600 rounded">
+                                    <span class="text-sm font-medium text-slate-700">Poor Technical Support</span>
+                                </label>
                             </div>
-                            <input type="password" id="password" class="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="••••••••" required value="password123">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Describe a Recent Major Customer Problem</label>
+                            <textarea id="custom_problem" rows="3" placeholder="Explain the specific issue your customers complain about..." class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded">
-                            <label for="remember" class="ml-2 block text-sm text-slate-700">Remember me</label>
-                        </div>
-                        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    <div class="pt-4 flex justify-between">
+                        <button onclick="nextStep(1)" class="border border-slate-300 hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-lg font-semibold">Back</button>
+                        <button onclick="nextStep(3)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md">
+                            Continue <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Primary Goal & Support Channel -->
+                <div id="step-3" class="step-content hidden space-y-6">
+                    <div class="flex items-center gap-3 text-indigo-600">
+                        <span class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center font-bold">3</span>
+                        <h2 class="text-xl font-bold text-slate-800">Support Preferences & Objectives</h2>
                     </div>
 
-                    <button type="submit" id="loginBtn" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                        Sign in
-                    </button>
-                </form>
-                
-                <div class="mt-6 text-center text-sm text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                    Demo credentials:<br><strong>admin@company.com</strong> / any password
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Primary Resolution Goal</label>
+                            <select id="primary_goal" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="Instant AI Response Generation">Instant AI Response Generation</option>
+                                <option value="Automatic SLA & Priority Escalation">Automatic SLA & Priority Escalation</option>
+                                <option value="Root Cause Analytics & Prevention">Root Cause Analytics & Prevention</option>
+                                <option value="Knowledge Base Grounded Resolution">Knowledge Base Grounded Resolution</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Preferred Communication Channel</label>
+                            <select id="pref_channel" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="Email">Email</option>
+                                <option value="WhatsApp">WhatsApp</option>
+                                <option value="Live Chat">Live Chat</option>
+                                <option value="SMS">SMS</option>
+                                <option value="Phone Call Script">Phone Call Script</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-between">
+                        <button onclick="nextStep(2)" class="border border-slate-300 hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-lg font-semibold">Back</button>
+                        <button onclick="runAnalysis()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-md">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i> Analyze & Suggest Solutions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: AI Analysis Results & Tailored Recommendations -->
+                <div id="step-4" class="step-content hidden space-y-6">
+                    <!-- Loading state -->
+                    <div id="ai-loading" class="py-12 text-center space-y-4">
+                        <div class="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                        <h3 class="text-xl font-bold text-slate-800">Analyzing Website & Information...</h3>
+                        <p class="text-slate-500 max-w-md mx-auto">Scanning product policies, extracting business context, and structuring resolution templates...</p>
+                    </div>
+
+                    <!-- Result Output -->
+                    <div id="ai-results" class="hidden space-y-6">
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 flex items-start gap-4">
+                            <i data-lucide="check-circle-2" class="w-8 h-8 text-emerald-600 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h3 class="text-lg font-bold text-emerald-900">Custom Business Workspace Ready!</h3>
+                                <p class="text-emerald-700 text-sm mt-1" id="res_summary"></p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                                <i data-lucide="lightbulb" class="w-5 h-5 text-amber-500"></i> AI Recommended Action Plan:
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="suggestions_container">
+                                <!-- Suggested items appended here -->
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t border-slate-200 flex justify-end">
+                            <button onclick="goToWorkspace()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-bold text-lg flex items-center gap-2 shadow-lg">
+                                Open Resolution Workspace <i data-lucide="arrow-right" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="js/app.js"></script>
     <script>
         lucide.createIcons();
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            const email = document.getElementById('email').value;
-            
-            // Loading state
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin mr-2"></i> Signing in...`;
-            lucide.createIcons();
-            
+
+        function nextStep(step) {
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            document.getElementById('progress').style.width = (step * 25) + '%';
+        }
+
+        async function runAnalysis() {
+            nextStep(4);
+            document.getElementById('ai-loading').classList.remove('hidden');
+            document.getElementById('ai-results').classList.add('hidden');
+
+            const bizName = document.getElementById('biz_name').value || 'Your Business';
+            const bizCat = document.getElementById('biz_category').value;
+            const bizUrl = document.getElementById('biz_url').value || 'https://example.com';
+            const customProb = document.getElementById('custom_problem').value || 'General customer support inquiries';
+            const goal = document.getElementById('primary_goal').value;
+            const channel = document.getElementById('pref_channel').value;
+
+            // Collect selected problems
+            const selectedProbs = Array.from(document.querySelectorAll('#problems_grid input:checked')).map(cb => cb.value);
+
+            const payload = {
+                business_name: bizName,
+                category: bizCat,
+                website: bizUrl,
+                problems: selectedProbs,
+                custom_problem: customProb,
+                goal: goal,
+                channel: channel
+            };
+
+            localStorage.setItem('user_onboarding', JSON.stringify(payload));
+
+            // Simulate AI site analysis & dynamic plan generation
             setTimeout(() => {
-                localStorage.setItem('user', JSON.stringify({ email }));
-                window.location.href = 'dashboard.html';
-            }, 800);
-        });
+                document.getElementById('ai-loading').classList.add('hidden');
+                document.getElementById('ai-results').classList.remove('hidden');
+
+                document.getElementById('res_summary').innerText = 
+                    `Analyzed ${bizUrl} for ${bizName} (${bizCat}). Configured automatic response workflows for ${channel}.`;
+
+                const suggestions = [
+                    { title: "RAG Policy Indexing", desc: `Auto-indexed support guidelines & policies for ${bizCat}. AI will cite these during drafting.` },
+                    { title: `${channel} Response Template`, desc: `Created tailored ${channel} templates configured with empathetic & resolution-oriented tone.` },
+                    { title: "Escalation Triggers Set", desc: `Configured automated escalation alerts for high severity issues like: ${selectedProbs.join(', ') || 'Critical Complaints'}.` },
+                    { title: "Root Cause Intelligence", desc: `Enabled pattern tracking to detect recurring issues from ${customProb.slice(0, 30)}...` }
+                ];
+
+                const container = document.getElementById('suggestions_container');
+                container.innerHTML = suggestions.map(s => `
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                        <h4 class="font-semibold text-indigo-900 mb-1">${s.title}</h4>
+                        <p class="text-slate-600 text-sm">${s.desc}</p>
+                    </div>
+                `).join('');
+
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        function goToWorkspace() {
+            window.location.href = 'dashboard.html';
+        }
     </script>
 </body>
 </html>
