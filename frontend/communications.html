@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communications | ComplaintIQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex z-20">
+        <div class="h-16 flex items-center px-6 border-b border-slate-200">
+            <i data-lucide="cpu" class="w-6 h-6 text-indigo-600 mr-2"></i>
+            <span class="text-xl font-bold text-slate-800">Complaint<span class="text-indigo-600">IQ</span></span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="dashboard.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="home" class="w-5 h-5 mr-3"></i>Dashboard</a>
+            <a href="complaints.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="message-square" class="w-5 h-5 mr-3"></i>Complaints</a>
+            <a href="complaint-new.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="plus-circle" class="w-5 h-5 mr-3"></i>New Complaint</a>
+            <a href="ai-assistant.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="bot" class="w-5 h-5 mr-3"></i>AI Assistant</a>
+            <a href="escalations.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="alert-triangle" class="w-5 h-5 mr-3"></i>Escalations</a>
+            <a href="recurring-problems.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="repeat" class="w-5 h-5 mr-3"></i>Recurring Problems</a>
+            <a href="knowledge-base.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="book-open" class="w-5 h-5 mr-3"></i>Knowledge Base</a>
+            <a href="resolutions.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="check-circle" class="w-5 h-5 mr-3"></i>Resolutions</a>
+            <a href="analytics.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="bar-chart" class="w-5 h-5 mr-3"></i>Analytics</a>
+            <a href="communications.html" class="sidebar-nav-item active flex items-center px-3 py-2 text-sm font-medium rounded-md bg-indigo-50 text-indigo-700"><i data-lucide="mail" class="w-5 h-5 mr-3"></i>Communications</a>
+            <a href="settings.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="settings" class="w-5 h-5 mr-3"></i>Settings</a>
+        </nav>
+        <div class="border-t border-slate-200 p-4" id="sidebar-user-profile"></div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
+            <div class="flex items-center">
+                <button class="md:hidden mr-4 text-slate-500"><i data-lucide="menu" class="w-6 h-6"></i></button>
+                <div>
+                    <h1 class="text-xl font-semibold text-slate-800">Communications</h1>
+                    <p class="text-xs text-slate-400">Dashboard / Communications</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-slate-400 hover:text-slate-600">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+                </button>
+                <button onclick="logout()" class="p-2 text-slate-400 hover:text-slate-600" title="Logout"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-6">
+            <!-- Channel Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-3 mb-6" id="channel-stats"></div>
+            <!-- Filters -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-6">
+                <div class="flex flex-wrap gap-3 items-center">
+                    <div class="relative flex-1 min-w-48">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+                        <input type="text" id="search-input" placeholder="Search customer, complaint ID, content..." class="pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm w-full focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <select id="filter-channel" class="border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">All Channels</option>
+                        <option value="email">Email</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="sms">SMS</option>
+                        <option value="phone">Phone Call</option>
+                        <option value="live_chat">Live Chat</option>
+                        <option value="social_media">Social Media</option>
+                        <option value="internal_note">Internal Note</option>
+                    </select>
+                    <select id="filter-direction" class="border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">All Directions</option>
+                        <option value="inbound">Inbound</option>
+                        <option value="outbound">Outbound</option>
+                    </select>
+                    <input type="date" id="filter-date-from" class="border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700">
+                    <input type="date" id="filter-date-to" class="border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700">
+                    <button onclick="applyFilters()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Filter</button>
+                    <button onclick="clearFilters()" class="border border-slate-300 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Clear</button>
+                </div>
+            </div>
+            <!-- Table -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-slate-800">Communication Records</h3>
+                    <span id="record-count" class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full"></span>
+                </div>
+                <div id="table-skeleton" class="p-4 space-y-3">
+                    <div class="skeleton h-10 rounded bg-slate-100 animate-pulse"></div>
+                    <div class="skeleton h-10 rounded bg-slate-100 animate-pulse"></div>
+                    <div class="skeleton h-10 rounded bg-slate-100 animate-pulse"></div>
+                    <div class="skeleton h-10 rounded bg-slate-100 animate-pulse"></div>
+                    <div class="skeleton h-10 rounded bg-slate-100 animate-pulse"></div>
+                </div>
+                <div id="table-wrapper" class="overflow-x-auto hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                            <tr>
+                                <th class="px-5 py-3 font-medium">Direction</th>
+                                <th class="px-5 py-3 font-medium">Channel</th>
+                                <th class="px-5 py-3 font-medium">Complaint</th>
+                                <th class="px-5 py-3 font-medium">Customer</th>
+                                <th class="px-5 py-3 font-medium">Preview</th>
+                                <th class="px-5 py-3 font-medium">Agent</th>
+                                <th class="px-5 py-3 font-medium">Date</th>
+                                <th class="px-5 py-3 font-medium">Status</th>
+                                <th class="px-5 py-3 font-medium"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="comms-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+                <div id="empty-state" class="hidden py-16 text-center">
+                    <svg class="mx-auto w-16 h-16 text-slate-200 mb-4" fill="none" viewBox="0 0 64 64"><rect x="8" y="16" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2"/><path d="M8 22l24 16 24-16" stroke="currentColor" stroke-width="2"/></svg>
+                    <p class="text-slate-500 font-medium">No communication records found</p>
+                    <p class="text-slate-400 text-sm mt-1">Try adjusting your filters</p>
+                </div>
+                <div id="pagination" class="px-5 py-3 border-t border-slate-200 flex items-center justify-between hidden">
+                    <p class="text-sm text-slate-500" id="pagination-info"></p>
+                    <div class="flex gap-2">
+                        <button id="prev-btn" onclick="changePage(-1)" class="px-3 py-1.5 border border-slate-300 rounded-md text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40">Previous</button>
+                        <button id="next-btn" onclick="changePage(1)" class="px-3 py-1.5 border border-slate-300 rounded-md text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl flex flex-col">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-800">Communication Detail</h2>
+                <button onclick="closeModal()" class="p-2 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6" id="modal-content"></div>
+        </div>
+    </div>
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    <script src="js/app.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+    const CHANNEL_CONFIG={email:{label:"Email",icon:"mail",color:"bg-blue-100 text-blue-700"},whatsapp:{label:"WhatsApp",icon:"message-circle",color:"bg-emerald-100 text-emerald-700"},sms:{label:"SMS",icon:"smartphone",color:"bg-violet-100 text-violet-700"},phone:{label:"Phone",icon:"phone",color:"bg-amber-100 text-amber-700"},live_chat:{label:"Live Chat",icon:"message-square",color:"bg-cyan-100 text-cyan-700"},social_media:{label:"Social",icon:"share-2",color:"bg-pink-100 text-pink-700"},internal_note:{label:"Internal",icon:"file-text",color:"bg-slate-100 text-slate-700"},other:{label:"Other",icon:"more-horizontal",color:"bg-gray-100 text-gray-700"}};
+    const STATUS_CONFIG={sent:"bg-emerald-100 text-emerald-700",delivered:"bg-blue-100 text-blue-700",pending:"bg-amber-100 text-amber-700",failed:"bg-rose-100 text-rose-700",simulated:"bg-slate-100 text-slate-600"};
+    const MOCK=[{id:1,complaint_id:"CMP-001",customer:"Alice Johnson",channel:"email",direction:"outbound",content:"Dear Alice, we have received your complaint regarding the defective product and our team is reviewing it. We will get back to you within 24 hours with a resolution. Thank you for your patience.",agent:"Sarah Chen",date:"2026-09-17T09:12:00Z",status:"delivered",recipient:"alice.j@email.com"},{id:2,complaint_id:"CMP-001",customer:"Alice Johnson",channel:"email",direction:"inbound",content:"I am very disappointed with the product quality. The item stopped working after two days of use. I need a refund or replacement immediately.",agent:"—",date:"2026-09-16T14:30:00Z",status:"delivered",recipient:"support@company.com"},{id:3,complaint_id:"CMP-002",customer:"Bob Martinez",channel:"whatsapp",direction:"outbound",content:"Hi Bob! Your refund request has been processed. You should see the amount credited within 3-5 business days. Reference: REF-4521. Let us know if you need anything else.",agent:"Mark Rivera",date:"2026-09-17T08:45:00Z",status:"sent",recipient:"+1-555-0102"},{id:4,complaint_id:"CMP-003",customer:"Carol White",channel:"phone",direction:"outbound",content:"[Call Script] Good morning, may I speak with Ms. Carol White? I am calling from Customer Support regarding complaint CMP-003 about your billing dispute. Duration: 8 minutes.",agent:"Lisa Park",date:"2026-09-16T11:00:00Z",status:"simulated",recipient:"+1-555-0103"},{id:5,complaint_id:"CMP-004",customer:"David Thompson",channel:"sms",direction:"outbound",content:"ComplaintIQ: Your case #CMP-004 has been escalated to our senior team. Expected resolution: 48hrs. Reference: ESC-789.",agent:"Sarah Chen",date:"2026-09-15T16:20:00Z",status:"delivered",recipient:"+1-555-0104"},{id:6,complaint_id:"CMP-005",customer:"Emma Davis",channel:"live_chat",direction:"outbound",content:"Hello Emma! I can see your account has a billing discrepancy of $45. I am escalating this to our billing team right now — you should hear back within 2 hours.",agent:"Mark Rivera",date:"2026-09-15T10:05:00Z",status:"delivered",recipient:"emma.d@email.com"},{id:7,complaint_id:"CMP-006",customer:"Frank Wilson",channel:"social_media",direction:"outbound",content:"Hi @FrankW, we are sorry to hear about your experience. Please send us a DM with your order number so we can resolve this privately. Our team is standing by!",agent:"Lisa Park",date:"2026-09-14T13:55:00Z",status:"sent",recipient:"@FrankW"},{id:8,complaint_id:"CMP-002",customer:"Bob Martinez",channel:"internal_note",direction:"outbound",content:"INTERNAL: Refund approved by billing team. Amount: $129.99. Processed via Stripe. Customer notified via WhatsApp. No further action required.",agent:"Mark Rivera",date:"2026-09-17T08:30:00Z",status:"delivered",recipient:"Internal"},{id:9,complaint_id:"CMP-007",customer:"Grace Lee",channel:"email",direction:"outbound",content:"Dear Grace, thank you for your patience. After reviewing your warranty claim, we are pleased to confirm that your replacement unit has been dispatched. Tracking: TRK-7890.",agent:"Sarah Chen",date:"2026-09-13T09:00:00Z",status:"delivered",recipient:"grace.l@email.com"},{id:10,complaint_id:"CMP-008",customer:"Henry Brown",channel:"email",direction:"inbound",content:"This is absolutely unacceptable! I have been waiting 2 weeks for my replacement and nobody updates me. I want to speak to a manager immediately.",agent:"—",date:"2026-09-12T17:45:00Z",status:"delivered",recipient:"support@company.com"},{id:11,complaint_id:"CMP-009",customer:"Isabella Clark",channel:"whatsapp",direction:"inbound",content:"Hello, I placed an order 3 weeks ago and it still has not arrived. Order number is ORD-56789. Can you help?",agent:"—",date:"2026-09-11T12:10:00Z",status:"delivered",recipient:"support"},{id:12,complaint_id:"CMP-010",customer:"James Adams",channel:"phone",direction:"inbound",content:"[Incoming Call] Customer called regarding technical support. Device not connecting to Wi-Fi after firmware update. Call duration: 12 minutes.",agent:"Lisa Park",date:"2026-09-10T15:30:00Z",status:"simulated",recipient:"Support Line"},{id:13,complaint_id:"CMP-003",customer:"Carol White",channel:"email",direction:"outbound",content:"Dear Carol, following up on the billing adjustment. A credit of $78.50 has been applied to your account. You will see it reflected within 24 hours.",agent:"Lisa Park",date:"2026-09-16T14:00:00Z",status:"delivered",recipient:"carol.w@email.com"},{id:14,complaint_id:"CMP-011",customer:"Karen Young",channel:"sms",direction:"outbound",content:"ComplaintIQ: Hi Karen, your service appointment is confirmed for Sep 20 at 10:00 AM. Case ref: CMP-011. Reply YES to confirm.",agent:"Sarah Chen",date:"2026-09-09T08:00:00Z",status:"delivered",recipient:"+1-555-0111"},{id:15,complaint_id:"CMP-012",customer:"Leo Martinez",channel:"live_chat",direction:"outbound",content:"I understand your frustration Leo. Let me pull up your account. I can see the duplicate charge and I am reversing it immediately. Should be back in 24-48 hours.",agent:"Mark Rivera",date:"2026-09-08T11:20:00Z",status:"delivered",recipient:"leo.m@email.com"}];
+    let allRecords=[],filtered=[],currentPage=1;const PAGE_SIZE=10;
+    document.addEventListener("DOMContentLoaded",async()=>{lucide.createIcons();if(typeof checkAuth==="function")checkAuth();renderChannelStats();await load();});
+    async function load(){try{const d=typeof api!=="undefined"?await api.getCommunications().catch(()=>null):null;allRecords=d&&d.length?d:MOCK;}catch{allRecords=MOCK;}filtered=[...allRecords];renderTable();}
+    function renderChannelStats(){const counts={};MOCK.forEach(r=>{counts[r.channel]=(counts[r.channel]||0)+1;});const total=MOCK.length;const c=document.getElementById("channel-stats");c.innerHTML=`<div class="bg-indigo-600 text-white rounded-xl p-3 text-center col-span-1"><p class="text-2xl font-bold">${total}</p><p class="text-xs opacity-80 mt-0.5">Total</p></div>`;Object.entries(CHANNEL_CONFIG).forEach(([k,cfg])=>{const n=counts[k]||0;c.innerHTML+=`<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-3 text-center cursor-pointer hover:border-indigo-300 transition-colors" onclick="quickFilter('${k}')"><p class="text-lg font-bold text-slate-800">${n}</p><p class="text-xs text-slate-500 mt-0.5">${cfg.label}</p></div>`;});lucide.createIcons();}
+    function quickFilter(ch){document.getElementById("filter-channel").value=ch;applyFilters();}
+    function applyFilters(){const s=document.getElementById("search-input").value.toLowerCase();const ch=document.getElementById("filter-channel").value;const dir=document.getElementById("filter-direction").value;const df=document.getElementById("filter-date-from").value;const dt=document.getElementById("filter-date-to").value;filtered=allRecords.filter(r=>{const ms=!s||r.customer.toLowerCase().includes(s)||r.complaint_id.toLowerCase().includes(s)||r.content.toLowerCase().includes(s);const mc=!ch||r.channel===ch;const md=!dir||r.direction===dir;const rd=new Date(r.date);const mf=!df||rd>=new Date(df);const mt=!dt||rd<=new Date(dt+"T23:59:59");return ms&&mc&&md&&mf&&mt;});currentPage=1;renderTable();}
+    function clearFilters(){["search-input","filter-channel","filter-direction","filter-date-from","filter-date-to"].forEach(id=>{document.getElementById(id).value="";});filtered=[...allRecords];currentPage=1;renderTable();}
+    function renderTable(){document.getElementById("table-skeleton").classList.add("hidden");const total=filtered.length;const start=(currentPage-1)*PAGE_SIZE;const page=filtered.slice(start,start+PAGE_SIZE);const tb=document.getElementById("comms-table-body");const tw=document.getElementById("table-wrapper");const es=document.getElementById("empty-state");const pg=document.getElementById("pagination");document.getElementById("record-count").textContent=`${total} record${total!==1?"s":""}`;if(total===0){tw.classList.add("hidden");es.classList.remove("hidden");pg.classList.add("hidden");return;}es.classList.add("hidden");tw.classList.remove("hidden");tb.innerHTML=page.map(r=>{const ch=CHANNEL_CONFIG[r.channel]||CHANNEL_CONFIG.other;const db=r.direction==="inbound"?`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">↓ Inbound</span>`:`<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">↑ Outbound</span>`;const sc=STATUS_CONFIG[r.status]||"bg-slate-100 text-slate-600";const pv=r.content.length>75?r.content.substring(0,75)+"…":r.content;return`<tr class="hover:bg-slate-50 cursor-pointer transition-colors" onclick="openModal(${r.id})"><td class="px-5 py-3">${db}</td><td class="px-5 py-3"><span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium ${ch.color}"><i data-lucide="${ch.icon}" class="w-3 h-3"></i>${ch.label}</span></td><td class="px-5 py-3"><a href="complaint-detail.html?id=${r.complaint_id}" class="text-indigo-600 hover:underline font-medium text-xs" onclick="event.stopPropagation()">${r.complaint_id}</a></td><td class="px-5 py-3 font-medium text-slate-800 text-sm">${r.customer}</td><td class="px-5 py-3 text-slate-500 text-sm max-w-xs truncate">${pv}</td><td class="px-5 py-3 text-slate-600 text-sm">${r.agent}</td><td class="px-5 py-3 text-slate-500 text-xs whitespace-nowrap">${fmtDate(r.date)}</td><td class="px-5 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium capitalize ${sc}">${r.status}</span></td><td class="px-5 py-3"><button onclick="event.stopPropagation();openModal(${r.id})" class="p-1.5 text-slate-400 hover:text-indigo-600 rounded"><i data-lucide="eye" class="w-4 h-4"></i></button></td></tr>`;}).join("");lucide.createIcons();const tp=Math.ceil(total/PAGE_SIZE);if(tp>1){pg.classList.remove("hidden");document.getElementById("pagination-info").textContent=`Showing ${start+1}–${Math.min(start+PAGE_SIZE,total)} of ${total}`;document.getElementById("prev-btn").disabled=currentPage===1;document.getElementById("next-btn").disabled=currentPage===tp;}else{pg.classList.add("hidden");}}
+    function changePage(d){currentPage+=d;renderTable();window.scrollTo({top:0,behavior:"smooth"});}
+    function openModal(id){const r=allRecords.find(x=>x.id===id);if(!r)return;const ch=CHANNEL_CONFIG[r.channel]||CHANNEL_CONFIG.other;const sc=STATUS_CONFIG[r.status]||"bg-slate-100 text-slate-600";document.getElementById("modal-content").innerHTML=`<div class="space-y-5"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center"><i data-lucide="${ch.icon}" class="w-5 h-5 text-indigo-600"></i></div><div><p class="font-semibold text-slate-800">${r.customer}</p><p class="text-xs text-slate-400">${r.complaint_id} · ${fmtDate(r.date)}</p></div><div class="ml-auto flex items-center gap-2"><span class="px-2 py-0.5 rounded-full text-xs font-medium capitalize ${sc}">${r.status}</span><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${ch.color}">${ch.label}</span></div></div><div class="grid grid-cols-2 gap-3 text-sm"><div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 uppercase tracking-wide mb-1">Direction</p><p class="font-medium text-slate-700 capitalize">${r.direction}</p></div><div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 uppercase tracking-wide mb-1">Agent</p><p class="font-medium text-slate-700">${r.agent}</p></div><div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 uppercase tracking-wide mb-1">Recipient</p><p class="font-medium text-slate-700 text-xs break-all">${r.recipient}</p></div><div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 uppercase tracking-wide mb-1">Complaint</p><a href="complaint-detail.html?id=${r.complaint_id}" class="font-medium text-indigo-600 hover:underline">${r.complaint_id}</a></div></div><div class="border border-slate-200 rounded-xl p-4"><p class="text-xs text-slate-400 uppercase tracking-wide mb-2">Message Content</p><p class="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">${r.content}</p></div><div class="flex gap-3"><a href="complaint-detail.html?id=${r.complaint_id}" class="flex-1 text-center bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">View Complaint</a><button onclick="copyContent(${r.id})" class="flex items-center gap-2 border border-slate-300 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50"><i data-lucide="copy" class="w-4 h-4"></i>Copy</button></div></div>`;document.getElementById("detail-modal").classList.remove("hidden");lucide.createIcons();}
+    function closeModal(){document.getElementById("detail-modal").classList.add("hidden");}
+    function copyContent(id){const r=allRecords.find(x=>x.id===id);if(!r)return;navigator.clipboard.writeText(r.content).then(()=>{if(typeof showToast==="function")showToast("Content copied!","success");});}
+    function fmtDate(iso){const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+" "+d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});}
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+    document.getElementById("search-input").addEventListener("keydown",e=>{if(e.key==="Enter")applyFilters();});
+    </script>
+</body>
+</html>

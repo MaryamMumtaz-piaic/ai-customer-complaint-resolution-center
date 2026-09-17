@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Response Assistant | ComplaintIQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen overflow-hidden bg-slate-50">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex z-20">
+        <div class="h-16 flex items-center px-6 border-b border-slate-200">
+            <i data-lucide="cpu" class="w-6 h-6 text-indigo-600 mr-2"></i>
+            <span class="text-xl font-bold text-slate-800">Complaint<span class="text-indigo-600">IQ</span></span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="dashboard.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="home" class="w-5 h-5 mr-3"></i>Dashboard</a>
+            <a href="complaints.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="message-square" class="w-5 h-5 mr-3"></i>Complaints</a>
+            <a href="ai-assistant.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 bg-indigo-50 text-indigo-600"><i data-lucide="bot" class="w-5 h-5 mr-3"></i>AI Assistant</a>
+            <!-- more links if needed -->
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-semibold text-slate-800">AI Response Assistant</h1>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col p-6 overflow-y-auto">
+                <div class="max-w-4xl w-full mx-auto space-y-6">
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <h2 class="text-lg font-semibold text-slate-800 mb-4">Complaint Selection</h2>
+                        <input type="text" placeholder="Search by Complaint ID or Customer Name..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 mb-4">
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                            <h3 class="font-medium text-slate-800 mb-1">C-1001: Late Delivery</h3>
+                            <p class="text-sm text-slate-600">Customer: John Doe (john@example.com)</p>
+                            <p class="text-sm text-slate-500 mt-2">"My order #8992 was supposed to arrive last week but tracking hasn't updated. I need this for a birthday tomorrow."</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-slate-800">Generate Response</h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Tone</label>
+                                <select class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                                    <option>Empathetic & Professional</option>
+                                    <option>Apologetic</option>
+                                    <option>Direct & Factual</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Channel</label>
+                                <select class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                                    <option>Email</option>
+                                    <option>SMS</option>
+                                    <option>WhatsApp</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2" onclick="generateDraft()">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i> Generate Draft
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-lg font-semibold text-slate-800">Draft Response</h2>
+                            <span class="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded">AI-generated draft — human review required</span>
+                        </div>
+                        <textarea id="draftArea" class="w-full h-48 p-4 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="Generated response will appear here..."></textarea>
+                        
+                        <div class="flex justify-end gap-3 mt-4">
+                            <button class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50">Regenerate</button>
+                            <button class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700" onclick="showToast('Response approved and copied!', 'success')">Approve & Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Sources -->
+            <div class="w-80 bg-white border-l border-slate-200 p-4 flex flex-col hidden lg:flex">
+                <h3 class="font-semibold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Sources Cited</h3>
+                <div class="flex-1 overflow-y-auto space-y-3">
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50">
+                        <h4 class="text-sm font-medium text-indigo-600">Shipping Policy v2.pdf</h4>
+                        <p class="text-xs text-slate-500 mt-1">"Delays beyond 5 days entitle the customer to a full shipping refund and 10% discount on next order."</p>
+                    </div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50">
+                        <h4 class="text-sm font-medium text-indigo-600">Res C-882 (Similar Case)</h4>
+                        <p class="text-xs text-slate-500 mt-1">Resolution: Refunded shipping, provided tracking update via carrier API.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+        function generateDraft() {
+            const area = document.getElementById('draftArea');
+            area.value = "Generating...";
+            setTimeout(() => {
+                area.value = "Dear John,\n\nI sincerely apologize for the delay with your order #8992. I completely understand your frustration, especially since you need it for a birthday tomorrow.\n\nI have contacted our carrier and upgraded your shipping to overnight at no extra cost. It is now guaranteed to arrive by 10 AM tomorrow. Additionally, per our policy, I have refunded your original shipping charges and added a 10% discount to your account for your next purchase.\n\nPlease let me know if you need anything else.\n\nBest regards,\nCustomer Support";
+                showToast('Draft generated successfully', 'success');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

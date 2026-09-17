@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | ComplaintIQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/app.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen overflow-hidden bg-slate-50">
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex z-20">
+        <div class="h-16 flex items-center px-6 border-b border-slate-200">
+            <i data-lucide="cpu" class="w-6 h-6 text-indigo-600 mr-2"></i>
+            <span class="text-xl font-bold text-slate-800">Complaint<span class="text-indigo-600">IQ</span></span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="dashboard.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50"><i data-lucide="home" class="w-5 h-5 mr-3"></i>Dashboard</a>
+            <a href="settings.html" class="sidebar-nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 bg-indigo-50 text-indigo-600"><i data-lucide="settings" class="w-5 h-5 mr-3"></i>Settings</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
+            <h1 class="text-xl font-semibold text-slate-800">Settings</h1>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6">
+            <div class="max-w-4xl bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200">
+                    <button class="px-6 py-4 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600">General</button>
+                    <button class="px-6 py-4 text-sm font-medium text-slate-500 hover:text-slate-700">AI Config</button>
+                    <button class="px-6 py-4 text-sm font-medium text-slate-500 hover:text-slate-700">Users</button>
+                </div>
+                
+                <div class="p-6 space-y-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-slate-800 mb-4">Company Profile</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Company Name</label>
+                                <input type="text" value="Acme Corp" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
+                                <select class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                                    <option>UTC (GMT+0)</option>
+                                    <option selected>EST (GMT-5)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-slate-200 pt-6">
+                        <h3 class="text-lg font-medium text-slate-800 mb-4">SLA Configuration (Hours)</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Low Priority</label>
+                                <input type="number" value="72" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Medium Priority</label>
+                                <input type="number" value="48" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">High Priority</label>
+                                <input type="number" value="24" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Critical Priority</label>
+                                <input type="number" value="4" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end pt-4">
+                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700" onclick="showToast('Settings saved', 'success')">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
